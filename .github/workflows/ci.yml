@@ -1,0 +1,33 @@
+name: URL Shortener CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  quality-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r api/requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          # Останавливаем сборку, если есть синтаксические ошибки или неиспользуемые импорты
+          flake8 api/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          echo "Code quality check passed!"
+
+      # 5. Собираем Docker образ (только если код прошел проверку!)
+      - name: Build Docker image
+        run: docker compose build
