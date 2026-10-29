@@ -3,3 +3,6 @@ uvicorn[standard]
 psycopg2-binary
 pydantic
 flake8
+redis
+pytest
+httpx

@@ -24,10 +24,14 @@ jobs:
 
       - name: Lint with flake8
         run: |
-          # Останавливаем сборку, если есть синтаксические ошибки или неиспользуемые импорты
           flake8 api/ --count --select=E9,F63,F7,F82 --show-source --statistics
           echo "Code quality check passed!"
 
-      # 5. Собираем Docker образ (только если код прошел проверку!)
+      - name: Run tests with pytest
+        run: |
+          cd api
+          pytest tests/ -v
+          echo "All tests passed!"
+
       - name: Build Docker image
         run: docker compose build
